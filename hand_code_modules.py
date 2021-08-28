@@ -123,10 +123,12 @@ def BackButton(lmList):
         if lmList[8][2] > lmList[5][2] and lmList[12][2] > lmList[9][2] and lmList[16][2] > lmList[13][2] \
                                                                         and lmList[20][2] < lmList[17][2]:
             # go back
-            keyboard.press(Key.caps_lock)
-        else:
-            # nothing
-            keyboard.release(Key.caps_lock)
+            keyboard.press(Key.alt_l)
+            keyboard.press(Key.left)
+            time.sleep(0.25)
+            keyboard.release(Key.alt_l)
+            keyboard.release(Key.left)
+            time.sleep(0.25)
 
 
 pTime = 0
