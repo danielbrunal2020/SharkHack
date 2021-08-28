@@ -7,7 +7,7 @@ import numpy as np
 
 
 class handDetection():
-    def __init__(self, mode=False, maxHands = 2, detectionCon = 0.7, trackCon = 0.5):
+    def __init__(self, mode=False, maxHands = 2, detectionCon = 0.5, trackCon = 0.5):
         self.mode = mode
         self.maxHands = maxHands
         self.detectionCon = detectionCon
@@ -27,18 +27,40 @@ class handDetection():
                     self.mpDraw.draw_landmarks(img, handLms, self.mpHands.HAND_CONNECTIONS)
         return img
 
-    def findPos(self, img, handNum = 0, draw = True):
+    def findRightPos(self, img, draw = True):
         lmList = []
-        if self.results.multi_hand_landmarks:
-            myHand = self.results.multi_hand_landmarks[handNum]
-            for id, landmark in enumerate(myHand.landmark):
-                h, w, c = img.shape
-                center_x, center_y = int(landmark.x * w), int(landmark.y * h)
-                lmList.append([id, center_x, center_y])
-                if draw:
-                    if id == 4:
-                        cv2.circle(img, (center_x, center_y), 15, (255, 0, 255), cv2.FILLED)
+        if self.results.multi_handedness:
+            for hand in range(len(self.results.multi_handedness)):
+                word = str(self.results.multi_handedness[hand].classification[0])
+                if "Right" in word:
+                    if self.results.multi_hand_landmarks:
+                        self.results.multi_handedness
+                        myHand = self.results.multi_hand_landmarks[hand]
+                        for id, landmark in enumerate(myHand.landmark):
+                            h, w, c = img.shape
+                            center_x, center_y = int(landmark.x * w), int(landmark.y * h)
+                            lmList.append([id, center_x, center_y])
+                            if draw:
+                                if id == 4:
+                                    cv2.circle(img, (center_x, center_y), 15, (255, 0, 255), cv2.FILLED)
+        return lmList
 
+    def findLeftPos(self, img, draw = True):
+        lmList = []
+        if self.results.multi_handedness:
+            for hand in range(len(self.results.multi_handedness)):
+                word = str(self.results.multi_handedness[hand].classification[0])
+                if "Left" in word:
+                    if self.results.multi_hand_landmarks:
+                        self.results.multi_handedness
+                        myHand = self.results.multi_hand_landmarks[hand]
+                        for id, landmark in enumerate(myHand.landmark):
+                            h, w, c = img.shape
+                            center_x, center_y = int(landmark.x * w), int(landmark.y * h)
+                            lmList.append([id, center_x, center_y])
+                            if draw:
+                                if id == 4:
+                                    cv2.circle(img, (center_x, center_y), 15, (255, 0, 255), cv2.FILLED)
         return lmList
 
 
@@ -51,9 +73,8 @@ def main():
     while True:
         success, img = cap.read()
         img = detector.findHands(img)
-        lmList = detector.findPos(img)
-        if len(lmList) != 0:
-            print(lmList[4]) #the number in [] represents the desired point (landmark) on hand
+        lmRightList = detector.findRightPos(img)
+        lmLeftList = detector.findLeftPos(img)
 
         cTime = time.time()
         fps = 1 / (cTime - pTime)
