@@ -5,8 +5,13 @@ import hand_code as htm
 import numpy as np
 import pyautogui
 from pynput.keyboard import Key, Controller
+import autopy
+import wx
 
-
+wCam, hCam = 640, 480
+wScreen, hScreen = autopy.screen.size()
+frameRed = 100
+smooth = 5
 
 def findSharkSign(lmList):
     if len(lmList) != 0:
@@ -30,6 +35,22 @@ def findSharkSign(lmList):
             pyautogui.click()
             time.sleep(0.5)
 
+def rightCursor(lmList):
+    if len(lmList) != 0:
+        global prev_x
+        global prev_y
+        global curr_x
+        global curr_y
+        pointer_x = lmList[8][1]
+        pointer_y = lmList[8][2]
+        convert_x = np.interp(pointer_x, (frameRed,wCam-frameRed), (0, wScreen))
+        convert_y = np.interp(pointer_y, (frameRed, hCam-frameRed), (0, hScreen))
+        curr_x = prev_x + (convert_x - prev_x) / smooth
+        curr_y = prev_y + (convert_y - prev_y) / smooth
+        autopy.mouse.move(wScreen - curr_x, curr_y)
+        prev_x = curr_x
+        prev_y = curr_y
+
 
 def BackButton(lmList):
     keyboard = Controller()
@@ -49,6 +70,8 @@ cTime = 0
 
 cap = cv2.VideoCapture(0)
 detector = htm.handDetection(detectionCon=0.7)
+prev_x, prev_y = 0, 0
+curr_x, curr_y = 0, 0
 while True:
     success, img = cap.read()
     img = detector.findHands(img)
@@ -60,6 +83,7 @@ while True:
     findSharkSign(lmListLeft)
     BackButton(lmListLeft)
 
+    rightCursor(lmListRight)
     cTime = time.time()
     fps = 1 / (cTime - pTime)
     pTime = cTime
