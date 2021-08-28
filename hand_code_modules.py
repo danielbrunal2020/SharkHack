@@ -4,9 +4,8 @@ import time
 import hand_code as htm
 import numpy as np
 import pyautogui
-import json
 
-def findSharkSign(lmList):
+def left_click(lmList):
     if len(lmList) != 0:
         shark_sign = True
         i = 4
@@ -22,11 +21,29 @@ def findSharkSign(lmList):
                     break
             i = i + 4
         if shark_sign:
-            #we have the shark sign at this frame
-            cv2.putText(img, "Shark sign found!", (50, 150), cv2.FONT_HERSHEY_PLAIN, 3,
-                        (170, 0, 200), 3)
+            cv2.putText(img, "Left Click", (10, 120), cv2.FONT_HERSHEY_PLAIN, 3, (170, 0, 200), 3)
             pyautogui.click()
-            time.sleep(0.5)
+            time.sleep(0.25)
+
+def right_click(lmList):
+    if len(lmList) != 0:
+        shark_sign = True
+        i = 4
+        while shark_sign and i < len(lmList):
+            comparison_x = lmList[i][1]
+            comparison_y = lmList[i][2]
+            for j in range(i + 4, len(lmList), 4):
+                current_x = lmList[j][1]
+                current_y = lmList[j][2]
+                distance = np.hypot(current_x-comparison_x, current_y - comparison_y)
+                if(distance > 25):
+                    shark_sign = False
+                    break
+            i = i + 4
+        if shark_sign:
+            cv2.putText(img, "Right Click", (10, 120), cv2.FONT_HERSHEY_PLAIN, 3, (170, 0, 200), 3)
+            pyautogui.click(button='right')
+            time.sleep(0.25)
 
 
 pTime = 0
@@ -40,7 +57,8 @@ while True:
     lmListRight = detector.findRightPos(img)
     lmListLeft = detector.findLeftPos(img)
 
-    findSharkSign(lmListLeft)
+    left_click(lmListLeft)
+    right_click(lmListRight)
 
     cTime = time.time()
     fps = 1 / (cTime - pTime)

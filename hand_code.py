@@ -42,7 +42,7 @@ class handDetection():
                             lmList.append([id, center_x, center_y])
                             if draw:
                                 if id == 4:
-                                    cv2.circle(img, (center_x, center_y), 15, (255, 0, 255), cv2.FILLED)
+                                    cv2.circle(img, (center_x, center_y), 5, (255, 0, 255), cv2.FILLED)
         return lmList
 
     def findRightPos(self, img, draw = True):
