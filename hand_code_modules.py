@@ -71,7 +71,7 @@ def rightCursor(lmList):
         convert_y = np.interp(pointer_y, (frameRed, hCam-frameRed), (0, hScreen))
         curr_x = prev_x + (convert_x - prev_x) / smooth
         curr_y = prev_y + (convert_y - prev_y) / smooth
-        autopy.mouse.move(wScreen - curr_x, curr_y)
+        autopy.mouse.move(curr_x, curr_y)
         prev_x = curr_x
         prev_y = curr_y
 
