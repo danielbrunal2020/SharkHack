@@ -40,7 +40,7 @@ while True:
     lmListRight = detector.findRightPos(img)
     lmListLeft = detector.findLeftPos(img)
 
-    findSharkSign(lmListRight)
+    findSharkSign(lmListLeft)
 
     cTime = time.time()
     fps = 1 / (cTime - pTime)

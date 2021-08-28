@@ -27,7 +27,7 @@ class handDetection():
                     self.mpDraw.draw_landmarks(img, handLms, self.mpHands.HAND_CONNECTIONS)
         return img
 
-    def findRightPos(self, img, draw = True):
+    def findLeftPos(self, img, draw = True):
         lmList = []
         if self.results.multi_handedness:
             for hand in range(len(self.results.multi_handedness)):
@@ -45,7 +45,7 @@ class handDetection():
                                     cv2.circle(img, (center_x, center_y), 15, (255, 0, 255), cv2.FILLED)
         return lmList
 
-    def findLeftPos(self, img, draw = True):
+    def findRightPos(self, img, draw = True):
         lmList = []
         if self.results.multi_handedness:
             for hand in range(len(self.results.multi_handedness)):
