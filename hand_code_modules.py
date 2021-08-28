@@ -4,7 +4,9 @@ import time
 import hand_code as htm
 import numpy as np
 import pyautogui
-import json
+from pynput.keyboard import Key, Controller
+
+
 
 def findSharkSign(lmList):
     if len(lmList) != 0:
@@ -22,11 +24,24 @@ def findSharkSign(lmList):
                     break
             i = i + 4
         if shark_sign:
-            #we have the shark sign at this frame
+            # we have the shark sign at this frame
             cv2.putText(img, "Shark sign found!", (50, 150), cv2.FONT_HERSHEY_PLAIN, 3,
                         (170, 0, 200), 3)
             pyautogui.click()
             time.sleep(0.5)
+
+
+def BackButton(lmList):
+    keyboard = Controller()
+    if len(lmList) != 0:
+        backButton = False
+        if lmList[8][2] > lmList[5][2] and lmList[12][2] > lmList[9][2] and lmList[16][2] > lmList[13][2] \
+                                                                        and lmList[20][2] < lmList[17][2]:
+            # go back
+            keyboard.press(Key.caps_lock)
+        else:
+            # nothing
+            keyboard.release(Key.caps_lock)
 
 
 pTime = 0
@@ -37,10 +52,13 @@ detector = htm.handDetection(detectionCon=0.7)
 while True:
     success, img = cap.read()
     img = detector.findHands(img)
+
+
     lmListRight = detector.findRightPos(img)
     lmListLeft = detector.findLeftPos(img)
 
     findSharkSign(lmListLeft)
+    BackButton(lmListLeft)
 
     cTime = time.time()
     fps = 1 / (cTime - pTime)
@@ -48,6 +66,7 @@ while True:
 
     cv2.putText(img, str(int(fps)), (10, 70), cv2.FONT_HERSHEY_PLAIN, 3,
                 (255, 0, 255), 3)
+
 
     cv2.imshow("Image", img)
     cv2.waitKey(1)
