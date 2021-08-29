@@ -175,7 +175,6 @@ def volume_increaser(lmList):
         #initiate volume increase
         if volume_change:
             keyboard.press(Key.media_volume_up)
-            time.sleep(0.25)
 
 def volume_decreaser(lmList):
     '''
@@ -229,7 +228,6 @@ def volume_decreaser(lmList):
         #initiate volume decrease
         if volume_change:
             keyboard.press(Key.media_volume_down)
-            time.sleep(0.25)
 
 
 
@@ -253,7 +251,7 @@ def BackButton(lmList):
             time.sleep(0.5)
             keyboard.release(Key.alt_l)
             keyboard.release(Key.left)
-            time.sleep(0.5)
+
 
 def ForwardButton(lmList):
     keyboard = Controller()
