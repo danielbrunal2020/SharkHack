@@ -366,6 +366,7 @@ while True:
     if event == sg.WIN_CLOSED:
         break
     elif event == 'Click here to begin using Click Bait!':
+        menu_window.Hide()
         while True:
             success, img = cap.read()
             img = cv2.flip(img, 1)
