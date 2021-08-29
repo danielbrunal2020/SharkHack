@@ -82,7 +82,6 @@ def scroll(lmList):
     4 conditions:
         -index finger has to be triple distance of pinky and ring finger to palm
         -ring finger has to be triple distance of pinky and ring finger to palm
-
     once four conditions are met, initiate scroll
     '''
     if len(lmList) != 0:
@@ -119,9 +118,18 @@ def scroll(lmList):
 def BackButton(lmList):
     keyboard = Controller()
     if len(lmList) != 0:
+        index_x = lmList[INDEX_FINGER_TIP][1]
+        index_y = lmList[INDEX_FINGER_TIP][2]
+        middle_x = lmList[MIDDLE_FINGER_TIP][1]
+        middle_y = lmList[MIDDLE_FINGER_TIP][2]
+        palm_x = lmList[PALM][1]
+        palm_y = lmList[PALM][2]
+        distance_index = np.hypot(index_x - palm_x, index_y - palm_y)
+        distance_middle = np.hypot(middle_x - palm_x, middle_y - palm_y)
         backButton = False
-        if lmList[8][2] > lmList[5][2] and lmList[12][2] > lmList[9][2] and lmList[16][2] > lmList[13][2] \
-                                                                        and lmList[20][2] < lmList[17][2]:
+        if lmList[8][2] < lmList[5][2] and lmList[12][2] > lmList[9][2] and lmList[16][2] > lmList[13][2] \
+                and lmList[20][2] < lmList[17][2] and distance_index > 2.5 * distance_middle:
+            # go back
             keyboard.press(Key.alt_l)
             keyboard.press(Key.left)
             time.sleep(0.5)
@@ -129,6 +137,27 @@ def BackButton(lmList):
             keyboard.release(Key.left)
             time.sleep(0.5)
 
+def ForwardButton(lmList):
+    keyboard = Controller()
+    if len(lmList) != 0:
+        index_x = lmList[INDEX_FINGER_TIP][1]
+        index_y = lmList[INDEX_FINGER_TIP][2]
+        middle_x = lmList[MIDDLE_FINGER_TIP][1]
+        middle_y = lmList[MIDDLE_FINGER_TIP][2]
+        palm_x = lmList[PALM][1]
+        palm_y = lmList[PALM][2]
+        distance_index = np.hypot(index_x - palm_x, index_y - palm_y)
+        distance_middle = np.hypot(middle_x - palm_x, middle_y - palm_y)
+        backButton = False
+        if lmList[8][2] < lmList[5][2] and lmList[12][2] > lmList[9][2] and lmList[16][2] > lmList[13][2] \
+                and lmList[20][2] < lmList[17][2] and distance_index > 2.5 * distance_middle:
+            # go back
+            keyboard.press(Key.alt_l)
+            keyboard.press(Key.right)
+            time.sleep(0.5)
+            keyboard.release(Key.alt_l)
+            keyboard.release(Key.right)
+            time.sleep(0.5)
 
 pTime = 0
 cTime = 0
@@ -150,6 +179,7 @@ while True:
     right_click(lmListRight)
     scroll(lmListRight)
     BackButton(lmListLeft)
+    ForwardButton(lmListRight)
     rightCursor(lmListRight)
 
     cTime = time.time()
