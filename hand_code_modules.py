@@ -324,12 +324,11 @@ def ForwardButton(lmList):
 def make_instruction_window():
     SPACING = 60
     layout_instructions = [
-        [sg.Text("Hi, Welcome to the Instructions Page! Here you'll find a list of all functionality offered by SharkMouse with their corresponding hand motions. Have fun!")],
+        [sg.Text("Hi, Welcome to the Instructions Page! Here you'll find a list of all functionality offered by Click Bait with their corresponding hand motions. Have fun!", justification = 'center', size = (2 * SPACING + 3, 1))],
         [sg.Text("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")],
         [sg.Text("FUNCTIONALITY", justification='center', size=(SPACING,1)), sg.Text("ACTION REQUIRED", justification='center', size=(SPACING,1))],
         [sg.Text("Move cursor around", justification='center', size=(SPACING,1)), sg.Text("Drag Right Hand Around Frame", justification='center', size=(SPACING,1))],
         [sg.Text('Left Click', justification='center', size=(SPACING,1)), sg.Text("Left Chomp", justification='center', size=(SPACING,1))],
-        #[sg.Image('C:\Users\chris\SharkHack\hand_gestures\left_click.png')],
         [sg.Text('Right Click', justification='center', size=(SPACING,1)), sg.Text("Right Chomp", justification='center', size=(SPACING,1))],
         [sg.Text('Scroll (Middle Click)', justification='center', size=(SPACING,1)), sg.Text("Harpoon", justification='center', size=(SPACING,1))],
         [sg.Text('Volume Up', justification='center', size=(SPACING,1)), sg.Text("Dorsal Fin", justification='center', size=(SPACING,1))],
@@ -352,13 +351,13 @@ detector = htm.handDetection(detectionCon=0.7)
 prev_x, prev_y = 0, 0
 curr_x, curr_y = 0, 0
 
-sg.theme('DarkAmber')
+sg.theme('DarkBlue13')
 layout = [
-    [sg.Text('Welcome to SharkMouse!', font='100', justification='center', size = (80, 1))],
+    [sg.Text('Welcome to Click Bait!', font='100', justification='center', size = (80, 1))],
     [sg.Text('')],
     [sg.Button('Hand Gestures', size = (100, 1))],
     [sg.Text('')],
-    [sg.Button('Click here to begin using SharkMouse!', size = (100, 1))],
+    [sg.Button('Click here to begin using Click Bait!', size = (100, 1))],
     [sg.Text('')]
 ]
 menu_window = sg.Window('Main Menu', layout, finalize = True)
@@ -366,7 +365,7 @@ while True:
     event, values = menu_window.read()
     if event == sg.WIN_CLOSED:
         break
-    elif event == 'Click here to begin using SharkMouse!':
+    elif event == 'Click here to begin using Click Bait!':
         while True:
             success, img = cap.read()
             img = cv2.flip(img, 1)
