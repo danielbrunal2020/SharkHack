@@ -1,11 +1,15 @@
 import cv2
 import mediapipe as mp
 import time
+
+from win32con import WS_EX_TOPMOST
+
 import hand_code as htm
 import numpy as np
 import pyautogui
 from pynput.keyboard import Key, Controller
 import autopy
+import win32api
 
 PALM = 0
 THUMB_TIP = 4
@@ -21,7 +25,6 @@ INDEX_JOINT = 6
 MIDDLE_JOINT = 10
 RING_JOINT = 14
 PINKY_JOINT = 18
-
 
 wCam, hCam = 640, 480
 wScreen, hScreen = autopy.screen.size()
@@ -123,6 +126,52 @@ def scroll(lmList):
             time.sleep(0.25)
 
 
+
+def BackButton(lmList):
+    keyboard = Controller()
+    if len(lmList) != 0:
+        index_x = lmList[INDEX_FINGER_TIP][1]
+        index_y = lmList[INDEX_FINGER_TIP][2]
+        middle_x = lmList[MIDDLE_FINGER_TIP][1]
+        middle_y = lmList[MIDDLE_FINGER_TIP][2]
+        palm_x = lmList[PALM][1]
+        palm_y = lmList[PALM][2]
+        distance_index = np.hypot(index_x - palm_x, index_y - palm_y)
+        distance_middle = np.hypot(middle_x - palm_x, middle_y - palm_y)
+        backButton = False
+        if lmList[8][2] < lmList[5][2] and lmList[12][2] > lmList[9][2] and lmList[16][2] > lmList[13][2] \
+                and lmList[20][2] < lmList[17][2] and distance_index > 2.5 * distance_middle:
+            # go back
+            keyboard.press(Key.alt_l)
+            keyboard.press(Key.left)
+            time.sleep(0.5)
+            keyboard.release(Key.alt_l)
+            keyboard.release(Key.left)
+            time.sleep(0.5)
+
+def ForwardButton(lmList):
+    keyboard = Controller()
+    if len(lmList) != 0:
+        index_x = lmList[INDEX_FINGER_TIP][1]
+        index_y = lmList[INDEX_FINGER_TIP][2]
+        middle_x = lmList[MIDDLE_FINGER_TIP][1]
+        middle_y = lmList[MIDDLE_FINGER_TIP][2]
+        palm_x = lmList[PALM][1]
+        palm_y = lmList[PALM][2]
+        distance_index = np.hypot(index_x - palm_x, index_y - palm_y)
+        distance_middle = np.hypot(middle_x - palm_x, middle_y - palm_y)
+        backButton = False
+        if lmList[8][2] < lmList[5][2] and lmList[12][2] > lmList[9][2] and lmList[16][2] > lmList[13][2] \
+                and lmList[20][2] < lmList[17][2] and distance_index > 2.5 * distance_middle:
+            # go back
+            keyboard.press(Key.alt_l)
+            keyboard.press(Key.right)
+            time.sleep(0.5)
+            keyboard.release(Key.alt_l)
+            keyboard.release(Key.right)
+            time.sleep(0.5)
+
+
 def volume_increaser(lmList):
     '''
     Desired hand gesture: "thumbs-up"
@@ -131,11 +180,10 @@ def volume_increaser(lmList):
     1. Acquire locations of thumb tip, index tip, middle tip, ring tip, pinky tip (both x and y)
     2. Acquire locations of index knuckle, middle knuckle, ring knuckle, pinky knuckle
     3. Acquire locations of index joint, middle joint, ring joint, pinky joint
-
     CONDITIONS:
     ------------------------------------------------------------------------------------
     FIRST: Check thumb is above index finger, middle finger, ring finger, pinky tips
-    SECOND: index knuckle location (5) has to be above middle finger knuckle (9), and so on until the 
+    SECOND: index knuckle location (5) has to be above middle finger knuckle (9), and so on until the
     ring finger knuckle has to be greater than the pinky knuckle location
     THIRD: finger tip x locations have to be located left of the joint locations
     Once all conditions are satisfied, then increase the volume
@@ -184,11 +232,10 @@ def volume_decreaser(lmList):
     1. Acquire locations of thumb tip, index tip, middle tip, ring tip, pinky tip (both x and y)
     2. Acquire locations of index knuckle, middle knuckle, ring knuckle, pinky knuckle
     3. Acquire locations of index joint, middle joint, ring joint, pinky joint
-
     CONDITIONS:
     ------------------------------------------------------------------------------------
     FIRST: Check thumb is below index finger, middle finger, ring finger, pinky tips
-    SECOND: index knuckle location (5) has to be below middle finger knuckle (9), and so on until the 
+    SECOND: index knuckle location (5) has to be below middle finger knuckle (9), and so on until the
     ring finger knuckle has to be below the pinky knuckle location
     THIRD: finger tip x locations have to be located left of the joint locations
     Once all conditions are satisfied, then decrease the volume
@@ -230,51 +277,6 @@ def volume_decreaser(lmList):
             keyboard.press(Key.media_volume_down)
 
 
-
-def BackButton(lmList):
-    keyboard = Controller()
-    if len(lmList) != 0:
-        index_x = lmList[INDEX_FINGER_TIP][1]
-        index_y = lmList[INDEX_FINGER_TIP][2]
-        middle_x = lmList[MIDDLE_FINGER_TIP][1]
-        middle_y = lmList[MIDDLE_FINGER_TIP][2]
-        palm_x = lmList[PALM][1]
-        palm_y = lmList[PALM][2]
-        distance_index = np.hypot(index_x - palm_x, index_y - palm_y)
-        distance_middle = np.hypot(middle_x - palm_x, middle_y - palm_y)
-        backButton = False
-        if lmList[8][2] < lmList[5][2] and lmList[12][2] > lmList[9][2] and lmList[16][2] > lmList[13][2] \
-                and lmList[20][2] < lmList[17][2] and distance_index > 2.5 * distance_middle:
-            # go back
-            keyboard.press(Key.alt_l)
-            keyboard.press(Key.left)
-            time.sleep(0.5)
-            keyboard.release(Key.alt_l)
-            keyboard.release(Key.left)
-
-
-def ForwardButton(lmList):
-    keyboard = Controller()
-    if len(lmList) != 0:
-        index_x = lmList[INDEX_FINGER_TIP][1]
-        index_y = lmList[INDEX_FINGER_TIP][2]
-        middle_x = lmList[MIDDLE_FINGER_TIP][1]
-        middle_y = lmList[MIDDLE_FINGER_TIP][2]
-        palm_x = lmList[PALM][1]
-        palm_y = lmList[PALM][2]
-        distance_index = np.hypot(index_x - palm_x, index_y - palm_y)
-        distance_middle = np.hypot(middle_x - palm_x, middle_y - palm_y)
-        backButton = False
-        if lmList[8][2] < lmList[5][2] and lmList[12][2] > lmList[9][2] and lmList[16][2] > lmList[13][2] \
-                and lmList[20][2] < lmList[17][2] and distance_index > 2.5 * distance_middle:
-            # go back
-            keyboard.press(Key.alt_l)
-            keyboard.press(Key.right)
-            time.sleep(0.5)
-            keyboard.release(Key.alt_l)
-            keyboard.release(Key.right)
-            time.sleep(0.5)
-
 pTime = 0
 cTime = 0
 
@@ -307,6 +309,10 @@ while True:
     cv2.putText(img, str(int(fps)), (10, 70), cv2.FONT_HERSHEY_PLAIN, 3,
                 (255, 0, 255), 3)
 
-
-    cv2.imshow("Image", img)
+    winname = "Image"
+    cv2.namedWindow(winname)
+    img2 = cv2.resize(img, (int(wCam / 2), int(hCam / 2)))
+    cv2.moveWindow(winname, int(wScreen) - int(wCam / 2) - 10, int(hScreen) - int(hCam / 2) - 80)
+    win32api.SetWindowLong(winname, -20, WS_EX_TOPMOST)
+    cv2.imshow(winname, img2)
     cv2.waitKey(1)
