@@ -331,11 +331,11 @@ def make_instruction_window():
         [sg.Text('Left Click', justification='center', size=(SPACING,1)), sg.Text("Left Chomp", justification='center', size=(SPACING,1))],
         #[sg.Image('C:\Users\chris\SharkHack\hand_gestures\left_click.png')],
         [sg.Text('Right Click', justification='center', size=(SPACING,1)), sg.Text("Right Chomp", justification='center', size=(SPACING,1))],
-        [sg.Text('Scroll (Middle Click)', justification='center', size=(SPACING,1)), sg.Text("Guns Up", justification='center', size=(SPACING,1))],
-        [sg.Text('Volume Up', justification='center', size=(SPACING,1)), sg.Text("Thumbs Up", justification='center', size=(SPACING,1))],
-        [sg.Text('Volume Down', justification='center', size=(SPACING,1)), sg.Text("Thumbs Down", justification='center', size=(SPACING,1))],
-        [sg.Text('Back Button', justification='center', size=(SPACING,1)), sg.Text("Left Spiderman", justification='center', size=(SPACING,1))],
-        [sg.Text('Forward Button', justification='center', size=(SPACING,1)), sg.Text("Right Spiderman", justification='center', size=(SPACING,1))]
+        [sg.Text('Scroll (Middle Click)', justification='center', size=(SPACING,1)), sg.Text("Harpoon", justification='center', size=(SPACING,1))],
+        [sg.Text('Volume Up', justification='center', size=(SPACING,1)), sg.Text("Dorsal Fin", justification='center', size=(SPACING,1))],
+        [sg.Text('Volume Down', justification='center', size=(SPACING,1)), sg.Text("Pectoral Fin", justification='center', size=(SPACING,1))],
+        [sg.Text('Back Button', justification='center', size=(SPACING,1)), sg.Text("Left Hammerhead", justification='center', size=(SPACING,1))],
+        [sg.Text('Forward Button', justification='center', size=(SPACING,1)), sg.Text("Right Hammerhead", justification='center', size=(SPACING,1))]
     ]
     window_instructions = sg.Window('Instructions', layout_instructions)
     while True:
@@ -356,7 +356,7 @@ sg.theme('DarkAmber')
 layout = [
     [sg.Text('Welcome to SharkMouse!', font='100', justification='center', size = (80, 1))],
     [sg.Text('')],
-    [sg.Button('Click here to view the instructions for the proper hand motions', size = (100, 1))],
+    [sg.Button('Hand Gestures', size = (100, 1))],
     [sg.Text('')],
     [sg.Button('Click here to begin using SharkMouse!', size = (100, 1))],
     [sg.Text('')]
@@ -397,7 +397,7 @@ while True:
             cv2.waitKey(1)
             if cv2.getWindowProperty("Image", 0) < 0:
                 exit()
-    elif event == 'Click here to view the instructions for the proper hand motions':
+    elif event == 'Hand Gestures':
         menu_window.Hide()
         make_instruction_window()
         menu_window.UnHide()
