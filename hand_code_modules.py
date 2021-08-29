@@ -13,6 +13,15 @@ INDEX_FINGER_TIP = 8
 MIDDLE_FINGER_TIP = 12
 RING_FINGER_TIP = 16
 PINKY_TIP = 20
+INDEX_KNUCKLE = 5
+MIDDLE_KNUCKLE = 9
+RING_KNUCKLE = 13
+PINKY_KNUCKLE = 17
+INDEX_JOINT = 6
+MIDDLE_JOINT = 10
+RING_JOINT = 14
+PINKY_JOINT = 18
+
 
 wCam, hCam = 640, 480
 wScreen, hScreen = autopy.screen.size()
@@ -114,6 +123,115 @@ def scroll(lmList):
             time.sleep(0.25)
 
 
+def volume_increaser(lmList):
+    '''
+    Desired hand gesture: "thumbs-up"
+    VALUES NEEDED:
+    ------------------------------------------------------------------------------------
+    1. Acquire locations of thumb tip, index tip, middle tip, ring tip, pinky tip (both x and y)
+    2. Acquire locations of index knuckle, middle knuckle, ring knuckle, pinky knuckle
+    3. Acquire locations of index joint, middle joint, ring joint, pinky joint
+
+    CONDITIONS:
+    ------------------------------------------------------------------------------------
+    FIRST: Check thumb is above index finger, middle finger, ring finger, pinky tips
+    SECOND: index knuckle location (5) has to be above middle finger knuckle (9), and so on until the 
+    ring finger knuckle has to be greater than the pinky knuckle location
+    THIRD: finger tip x locations have to be located left of the joint locations
+    Once all conditions are satisfied, then increase the volume
+    '''
+    if len(lmList) != 0:
+        keyboard = Controller()
+        volume_change = True
+        #step 1 - Values
+        thumb_y = lmList[THUMB_TIP][2]
+        index_tip_x = lmList[INDEX_FINGER_TIP][1]
+        index_tip_y = lmList[INDEX_FINGER_TIP][2]
+        middle_tip_x = lmList[MIDDLE_FINGER_TIP][1]
+        middle_tip_y = lmList[MIDDLE_FINGER_TIP][2]
+        ring_tip_x = lmList[RING_FINGER_TIP][1]
+        ring_tip_y = lmList[RING_FINGER_TIP][2]
+        pinky_tip_x = lmList[PINKY_TIP][1]
+        pinky_tip_y = lmList[PINKY_TIP][2]
+        #step 2 - Values
+        index_knuckle_y = lmList[INDEX_KNUCKLE][2]
+        middle_knuckle_y = lmList[MIDDLE_KNUCKLE][2]
+        ring_knuckle_y = lmList[RING_KNUCKLE][2]
+        pinky_knuckle_y = lmList[PINKY_KNUCKLE][2]
+        #step 3 - Values
+        index_joint_x = lmList[INDEX_JOINT][1]
+        middle_joint_x = lmList[MIDDLE_JOINT][1]
+        ring_joint_x = lmList[RING_JOINT][1]
+        pinky_joint_x = lmList[PINKY_JOINT][1]
+        #checking first condition:
+        if not(thumb_y < index_tip_y and thumb_y < middle_tip_y and thumb_y < ring_tip_y and thumb_y < pinky_tip_y):
+            volume_change = False
+        #checking second condition:
+        if not(index_knuckle_y < middle_knuckle_y and middle_knuckle_y < ring_knuckle_y and ring_knuckle_y < pinky_knuckle_y):
+            volume_change = False
+        #checking third condition:
+        if not(index_tip_x < index_joint_x and middle_tip_x < middle_joint_x and ring_tip_x < ring_joint_x and pinky_tip_x < pinky_joint_x):
+            volume_change = False
+        #initiate volume increase
+        if volume_change:
+            keyboard.press(Key.media_volume_up)
+            time.sleep(0.25)
+
+def volume_decreaser(lmList):
+    '''
+    Desired hand gesture: "thumbs-down"
+    VALUES NEEDED:
+    ------------------------------------------------------------------------------------
+    1. Acquire locations of thumb tip, index tip, middle tip, ring tip, pinky tip (both x and y)
+    2. Acquire locations of index knuckle, middle knuckle, ring knuckle, pinky knuckle
+    3. Acquire locations of index joint, middle joint, ring joint, pinky joint
+
+    CONDITIONS:
+    ------------------------------------------------------------------------------------
+    FIRST: Check thumb is below index finger, middle finger, ring finger, pinky tips
+    SECOND: index knuckle location (5) has to be below middle finger knuckle (9), and so on until the 
+    ring finger knuckle has to be below the pinky knuckle location
+    THIRD: finger tip x locations have to be located left of the joint locations
+    Once all conditions are satisfied, then decrease the volume
+    '''
+    if len(lmList) != 0:
+        keyboard = Controller()
+        volume_change = True
+        #step 1 - Values
+        thumb_y = lmList[THUMB_TIP][2]
+        index_tip_x = lmList[INDEX_FINGER_TIP][1]
+        index_tip_y = lmList[INDEX_FINGER_TIP][2]
+        middle_tip_x = lmList[MIDDLE_FINGER_TIP][1]
+        middle_tip_y = lmList[MIDDLE_FINGER_TIP][2]
+        ring_tip_x = lmList[RING_FINGER_TIP][1]
+        ring_tip_y = lmList[RING_FINGER_TIP][2]
+        pinky_tip_x = lmList[PINKY_TIP][1]
+        pinky_tip_y = lmList[PINKY_TIP][2]
+        #step 2 - Values
+        index_knuckle_y = lmList[INDEX_KNUCKLE][2]
+        middle_knuckle_y = lmList[MIDDLE_KNUCKLE][2]
+        ring_knuckle_y = lmList[RING_KNUCKLE][2]
+        pinky_knuckle_y = lmList[PINKY_KNUCKLE][2]
+        #step 3 - Values
+        index_joint_x = lmList[INDEX_JOINT][1]
+        middle_joint_x = lmList[MIDDLE_JOINT][1]
+        ring_joint_x = lmList[RING_JOINT][1]
+        pinky_joint_x = lmList[PINKY_JOINT][1]
+        #checking first condition:
+        if not(thumb_y > index_tip_y and thumb_y > middle_tip_y and thumb_y > ring_tip_y and thumb_y > pinky_tip_y):
+            volume_change = False
+        #checking second condition:
+        if not(index_knuckle_y > middle_knuckle_y and middle_knuckle_y > ring_knuckle_y and ring_knuckle_y > pinky_knuckle_y):
+            volume_change = False
+        #checking third condition:
+        if not(index_tip_x < index_joint_x and middle_tip_x < middle_joint_x and ring_tip_x < ring_joint_x and pinky_tip_x < pinky_joint_x):
+            volume_change = False
+        #initiate volume decrease
+        if volume_change:
+            keyboard.press(Key.media_volume_down)
+            time.sleep(0.25)
+
+
 
 def BackButton(lmList):
     keyboard = Controller()
@@ -181,6 +299,8 @@ while True:
     BackButton(lmListLeft)
     ForwardButton(lmListRight)
     rightCursor(lmListRight)
+    volume_increaser(lmListLeft)
+    volume_decreaser(lmListLeft)
 
     cTime = time.time()
     fps = 1 / (cTime - pTime)
