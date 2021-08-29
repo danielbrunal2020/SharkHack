@@ -322,18 +322,20 @@ def ForwardButton(lmList):
             time.sleep(0.5)
 
 def make_instruction_window():
+    SPACING = 60
     layout_instructions = [
         [sg.Text("Hi, Welcome to the Instructions Page! Here you'll find a list of all functionality offered by SharkMouse with their corresponding hand motions. Have fun!")],
         [sg.Text("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")],
-        [sg.Text("Move cursor around (Move right hand around screen)")],
-        [sg.Text('Left Click')],
+        [sg.Text("FUNCTIONALITY", justification='center', size=(SPACING,1)), sg.Text("ACTION REQUIRED", justification='center', size=(SPACING,1))],
+        [sg.Text("Move cursor around", justification='center', size=(SPACING,1)), sg.Text("Drag Right Hand Around Frame", justification='center', size=(SPACING,1))],
+        [sg.Text('Left Click', justification='center', size=(SPACING,1)), sg.Text("Left Chomp", justification='center', size=(SPACING,1))],
         #[sg.Image('C:\Users\chris\SharkHack\hand_gestures\left_click.png')],
-        [sg.Text('Right Click')],
-        [sg.Text('Scroll (Middle Click')],
-        [sg.Text('Volume Up')],
-        [sg.Text('Volume Down')],
-        [sg.Text('Back Button')],
-        [sg.Text('Forward Button')]
+        [sg.Text('Right Click', justification='center', size=(SPACING,1)), sg.Text("Right Chomp", justification='center', size=(SPACING,1))],
+        [sg.Text('Scroll (Middle Click)', justification='center', size=(SPACING,1)), sg.Text("Guns Up", justification='center', size=(SPACING,1))],
+        [sg.Text('Volume Up', justification='center', size=(SPACING,1)), sg.Text("Thumbs Up", justification='center', size=(SPACING,1))],
+        [sg.Text('Volume Down', justification='center', size=(SPACING,1)), sg.Text("Thumbs Down", justification='center', size=(SPACING,1))],
+        [sg.Text('Back Button', justification='center', size=(SPACING,1)), sg.Text("Left Spiderman", justification='center', size=(SPACING,1))],
+        [sg.Text('Forward Button', justification='center', size=(SPACING,1)), sg.Text("Right Spiderman", justification='center', size=(SPACING,1))]
     ]
     window_instructions = sg.Window('Instructions', layout_instructions)
     while True:
