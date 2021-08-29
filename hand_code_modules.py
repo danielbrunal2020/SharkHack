@@ -1,15 +1,14 @@
+from PySimpleGUI.PySimpleGUI import InputText
 import cv2
 import mediapipe as mp
 import time
-
-from win32con import WS_EX_TOPMOST
 
 import hand_code as htm
 import numpy as np
 import pyautogui
 from pynput.keyboard import Key, Controller
 import autopy
-import win32api
+import PySimpleGUI as sg
 
 PALM = 0
 THUMB_TIP = 4
@@ -277,6 +276,72 @@ def volume_decreaser(lmList):
             keyboard.press(Key.media_volume_down)
 
 
+
+def BackButton(lmList):
+    keyboard = Controller()
+    if len(lmList) != 0:
+        index_x = lmList[INDEX_FINGER_TIP][1]
+        index_y = lmList[INDEX_FINGER_TIP][2]
+        middle_x = lmList[MIDDLE_FINGER_TIP][1]
+        middle_y = lmList[MIDDLE_FINGER_TIP][2]
+        palm_x = lmList[PALM][1]
+        palm_y = lmList[PALM][2]
+        distance_index = np.hypot(index_x - palm_x, index_y - palm_y)
+        distance_middle = np.hypot(middle_x - palm_x, middle_y - palm_y)
+        backButton = False
+        if lmList[8][2] < lmList[5][2] and lmList[12][2] > lmList[9][2] and lmList[16][2] > lmList[13][2] \
+                and lmList[20][2] < lmList[17][2] and distance_index > 2.5 * distance_middle:
+            # go back
+            keyboard.press(Key.alt_l)
+            keyboard.press(Key.left)
+            time.sleep(0.5)
+            keyboard.release(Key.alt_l)
+            keyboard.release(Key.left)
+
+
+def ForwardButton(lmList):
+    keyboard = Controller()
+    if len(lmList) != 0:
+        index_x = lmList[INDEX_FINGER_TIP][1]
+        index_y = lmList[INDEX_FINGER_TIP][2]
+        middle_x = lmList[MIDDLE_FINGER_TIP][1]
+        middle_y = lmList[MIDDLE_FINGER_TIP][2]
+        palm_x = lmList[PALM][1]
+        palm_y = lmList[PALM][2]
+        distance_index = np.hypot(index_x - palm_x, index_y - palm_y)
+        distance_middle = np.hypot(middle_x - palm_x, middle_y - palm_y)
+        backButton = False
+        if lmList[8][2] < lmList[5][2] and lmList[12][2] > lmList[9][2] and lmList[16][2] > lmList[13][2] \
+                and lmList[20][2] < lmList[17][2] and distance_index > 2.5 * distance_middle:
+            # go back
+            keyboard.press(Key.alt_l)
+            keyboard.press(Key.right)
+            time.sleep(0.5)
+            keyboard.release(Key.alt_l)
+            keyboard.release(Key.right)
+            time.sleep(0.5)
+
+def make_instruction_window():
+    layout_instructions = [
+        [sg.Text("Hi, Welcome to the Instructions Page! Here you'll find a list of all functionality offered by SharkMouse with their corresponding hand motions. Have fun!")],
+        [sg.Text("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")],
+        [sg.Text("Move cursor around (Move right hand around screen)")],
+        [sg.Text('Left Click')],
+        #[sg.Image('C:\Users\chris\SharkHack\hand_gestures\left_click.png')],
+        [sg.Text('Right Click')],
+        [sg.Text('Scroll (Middle Click')],
+        [sg.Text('Volume Up')],
+        [sg.Text('Volume Down')],
+        [sg.Text('Back Button')],
+        [sg.Text('Forward Button')]
+    ]
+    window_instructions = sg.Window('Instructions', layout_instructions)
+    while True:
+        event, values = window_instructions.read()
+        if event == sg.WIN_CLOSED:
+            break
+    window_instructions.close()
+
 pTime = 0
 cTime = 0
 
@@ -284,35 +349,56 @@ cap = cv2.VideoCapture(0)
 detector = htm.handDetection(detectionCon=0.7)
 prev_x, prev_y = 0, 0
 curr_x, curr_y = 0, 0
+
+sg.theme('DarkAmber')
+layout = [
+    [sg.Text('Welcome to SharkMouse!', font='100', justification='center', size = (80, 1))],
+    [sg.Text('')],
+    [sg.Button('Click here to view the instructions for the proper hand motions', size = (100, 1))],
+    [sg.Text('')],
+    [sg.Button('Click here to begin using SharkMouse!', size = (100, 1))],
+    [sg.Text('')]
+]
+menu_window = sg.Window('Main Menu', layout, finalize = True)
 while True:
-    success, img = cap.read()
-    img = cv2.flip(img, 1)
-    img = detector.findHands(img)
+    event, values = menu_window.read()
+    if event == sg.WIN_CLOSED:
+        break
+    elif event == 'Click here to begin using SharkMouse!':
+        while True:
+            success, img = cap.read()
+            img = cv2.flip(img, 1)
+            img = detector.findHands(img)
 
 
-    lmListRight = detector.findRightPos(img)
-    lmListLeft = detector.findLeftPos(img)
+            lmListRight = detector.findRightPos(img)
+            lmListLeft = detector.findLeftPos(img)
 
-    left_click(lmListLeft)
-    right_click(lmListRight)
-    scroll(lmListRight)
-    BackButton(lmListLeft)
-    ForwardButton(lmListRight)
-    rightCursor(lmListRight)
-    volume_increaser(lmListLeft)
-    volume_decreaser(lmListLeft)
+            left_click(lmListLeft)
+            right_click(lmListRight)
+            scroll(lmListRight)
+            BackButton(lmListLeft)
+            ForwardButton(lmListRight)
+            rightCursor(lmListRight)
+            volume_increaser(lmListLeft)
+            volume_decreaser(lmListLeft)
 
-    cTime = time.time()
-    fps = 1 / (cTime - pTime)
-    pTime = cTime
+            cTime = time.time()
+            fps = 1 / (cTime - pTime)
+            pTime = cTime
 
-    cv2.putText(img, str(int(fps)), (10, 70), cv2.FONT_HERSHEY_PLAIN, 3,
-                (255, 0, 255), 3)
+            cv2.putText(img, str(int(fps)), (10, 70), cv2.FONT_HERSHEY_PLAIN, 3,
+                        (255, 0, 255), 3)
 
-    winname = "Image"
-    cv2.namedWindow(winname)
-    img2 = cv2.resize(img, (int(wCam / 2), int(hCam / 2)))
-    cv2.moveWindow(winname, int(wScreen) - int(wCam / 2) - 10, int(hScreen) - int(hCam / 2) - 80)
-    win32api.SetWindowLong(winname, -20, WS_EX_TOPMOST)
-    cv2.imshow(winname, img2)
-    cv2.waitKey(1)
+
+            cv2.imshow("Image", img)
+            cv2.waitKey(1)
+            if cv2.getWindowProperty("Image", 0) < 0:
+                exit()
+    elif event == 'Click here to view the instructions for the proper hand motions':
+        menu_window.Hide()
+        make_instruction_window()
+        menu_window.UnHide()
+menu_window.close()
+        
+
